@@ -2,12 +2,7 @@
   BioloidController.h - ArbotiX Library for Bioloid Pose Engine
   Copyright (c) 2008-2012 Michael E. Ferguson.  All right reserved.
 
-  Copyright (c) 2012 Matthew Paulishen. Copypaster: NaN a.k.a. tician
-    Contact at: bill.gates.is.a.douche@hotmail.com
-      - Yes, the email account is real.
-      - No, it is not very professional.
-      - Why?  Because I was required to have a WindowsLive account
-	      for registering MS Visual Studio
+  Copyright (c) 2012, 2013 Matthew Paulishen. Copypaster: NaN a.k.a. tician
 
   This library is free software; you can redistribute it and/or
   modify it under the terms of the GNU Lesser General Public
