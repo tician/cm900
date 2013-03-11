@@ -25,7 +25,8 @@
 #define AXM_PRESENT_POSITION_L		36
 
 /* new-style setup */
-void BioloidController::setup(int servo_cnt){
+void BioloidController::setup(int servo_cnt)
+{
     int i;
     // setup storage
     id_ = (unsigned char *) malloc(servo_cnt * sizeof(unsigned char));
@@ -43,30 +44,14 @@ void BioloidController::setup(int servo_cnt){
     playing = 0;
     lastframe_ = millis();
 }
-void BioloidController::setId(int index, int id){
+void BioloidController::setId(int index, int id)
+{
     id_[index] = id;
 }
-int BioloidController::getId(int index){
+int BioloidController::getId(int index)
+{
     return id_[index];
 }
-
-// New function to get ident array and number of servo IDs
-//  available to any pose in the sequence
-
-/* load a named sequence's used servos from FLASH into ident. */
-void BioloidController::loadIdent( const unsigned int * addr )
-{
-	if (addr == 0)//NULL)
-		return;
-
-    int i;
-    int sequenceSize = pgm_read_word_near(addr); // number of servos in this sequence
-	if (sequenceSize>poseSize)
-		sequenceSize=poseSize;
-    for(i=0; i<sequenceSize; i++)
-        id_[i] = pgm_read_word_near(addr+1+i);
-}
-
 
 /* load a named pose from FLASH into nextpose. */
 void BioloidController::loadPose( const unsigned int * addr )
@@ -77,14 +62,16 @@ void BioloidController::loadPose( const unsigned int * addr )
         nextpose[i] = pgm_read_word_near(addr+1+i) << BIOLOID_SHIFT;
 }
 /* read in current servo positions to the pose. */
-void BioloidController::readPose(){
+void BioloidController::readPose()
+{
     for(int i=0;i<poseSize;i++){
         pose_[i] = dxl_get_word(id_[i],AXM_PRESENT_POSITION_L)<<BIOLOID_SHIFT;
         delay(25);
     }
 }
 /* write pose out to servos using sync write. */
-void BioloidController::writePose(){
+void BioloidController::writePose()
+{
     int temp;
     int length = 4 + (poseSize * 3);   // 3 = id + pos(2byte)
     int checksum = BROADCAST_ID + length + INST_SYNC_WRITE + 2 + AXM_GOAL_POSITION_L;
@@ -108,7 +95,8 @@ void BioloidController::writePose(){
 
 /* set up for an interpolation from pose to nextpose over TIME 
     milliseconds by setting servo speeds. */
-void BioloidController::interpolateSetup(int time){
+void BioloidController::interpolateSetup(int time)
+{
     int i;
     int frames = (time/BIOLOID_FRAME_LENGTH) + 1;
     lastframe_ = millis();
@@ -123,7 +111,8 @@ void BioloidController::interpolateSetup(int time){
     interpolating = 1;
 }
 /* interpolate our pose, this should be called at about 30Hz. */
-void BioloidController::interpolateStep(){
+void BioloidController::interpolateStep()
+{
     if(interpolating == 0) return;
     int i;
     int complete = poseSize;
@@ -155,7 +144,8 @@ void BioloidController::interpolateStep(){
 }
 
 /* get a servo value in the current pose */
-int BioloidController::getCurPose(int id){
+int BioloidController::getCurPose(int id)
+{
     for(int i=0; i<poseSize; i++){
         if( id_[i] == id )
             return ((pose_[i]) >> BIOLOID_SHIFT);
@@ -163,7 +153,8 @@ int BioloidController::getCurPose(int id){
     return -1;
 }
 /* get a servo value in the next pose */
-int BioloidController::getNextPose(int id){
+int BioloidController::getNextPose(int id)
+{
     for(int i=0; i<poseSize; i++){
         if( id_[i] == id )
             return ((nextpose_[i]) >> BIOLOID_SHIFT);
@@ -171,7 +162,8 @@ int BioloidController::getNextPose(int id){
     return -1;
 }
 /* set a servo value in the next pose */
-void BioloidController::setNextPose(int id, int pos){
+void BioloidController::setNextPose(int id, int pos)
+{
     for(int i=0; i<poseSize; i++){
         if( id_[i] == id ){
             nextpose_[i] = (pos << BIOLOID_SHIFT);
@@ -181,12 +173,9 @@ void BioloidController::setNextPose(int id, int pos){
 }
 
 /* play a sequence. */
-void BioloidController::playSeq( const transition_t  * addr ){
+void BioloidController::playSeq( const transition_t  * addr )
+{
     sequence = (transition_t *) addr;
-
-	// get the pointer to the ident array (stored in pose instead of NULL)
-    loadIdent((const unsigned int *)pgm_read_word_near(&sequence->pose));
-
     // number of transitions left to load
     transitions = pgm_read_word_near(&sequence->time);
     sequence++;    
@@ -197,7 +186,8 @@ void BioloidController::playSeq( const transition_t  * addr ){
     playing = 1;
 }
 /* keep playing our sequence */
-void BioloidController::play(){
+void BioloidController::play()
+{
     if(playing == 0) return;
     if(interpolating > 0){
         interpolateStep();

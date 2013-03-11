@@ -36,6 +36,9 @@ typedef const unsigned short prog_uint16_t;
 #define pgm_read_word(x) (*(prog_uint16_t*)x)
 
 #ifdef USING_NEWER_POSES
+// get the pointer to the ident array (stored in pose instead of NULL)
+//  loadIdent((const unsigned int *)pgm_read_word_near(&sequence->pose));
+
 /* poses (arm):
  *   prog_uint16_t Sitdown_1[] __FLASH__ = {8,248,775,31,992,763,260,512,512};	//wait:0.000	//move:1.000
  * number of servos and servo IDs in sequence (new):
@@ -52,6 +55,8 @@ typedef const unsigned short prog_uint16_t;
  *  transition_t name[] __FLASH__ = {{NULL,count},{pose_name,1000},...} 
  */
 #endif
+
+
 
 
 
@@ -79,7 +84,6 @@ class BioloidController
     void setup(int servo_cnt);
 
     /* Pose Manipulation */
-    void loadIdent( const unsigned int * addr );// load the number of servos and IDs from FLASH
     void loadPose( const unsigned int * addr ); // load a named pose from FLASH  
     void readPose();                            // read a pose in from the servos  
     void writePose();                           // write a pose out to the servos
@@ -89,14 +93,12 @@ class BioloidController
     void setId(int index, int id);              // set the id of a particular storage index
     int getId(int index);                       // get the id of a particular storage index
 
-
     /* Pose Engine */
     void interpolateSetup(int time);            // calculate speeds for smooth transition
     void interpolateStep();                     // move forward one step in current interpolation  
     unsigned char interpolating;                // are we in an interpolation? 0=No, 1=Yes
     unsigned char runningSeq;                   // are we running a sequence? 0=No, 1=Yes 
     int poseSize;                               // how many servos are in this pose, used by Sync()
-    int sequenceSize;                           // how many servos are in this sequence, used by Sync()
     /* to interpolate:
      *  bioloid.loadPose(myPose);
      *  bioloid.interpolateSetup(67);
