@@ -28,9 +28,12 @@
  *  PROGMEM transition_t name[] = {{NULL,count},{pose_name,1000},...} 
  */
 
-#define PROGMEM	__FLASH__
+//#define PROGMEM	__FLASH__
 // http://leaflabs.com/docs/arm-gcc.html#arm-gcc-attribute-flash
-#include <wirish_types.h>
+//#include <wirish_types.h>
+#define __attr_flash __attribute__((section (".USER_FLASH")))
+#define __FLASH__ __attr_flash
+
 typedef const unsigned short prog_uint16_t;
 #define pgm_read_word_near(x) (*(prog_uint16_t*)x)
 #define pgm_read_word(x) (*(prog_uint16_t*)x)
