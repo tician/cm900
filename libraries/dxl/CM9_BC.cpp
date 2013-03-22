@@ -19,7 +19,7 @@
   Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-#include "BioloidController.h"
+#include "CM9_BC.h"
 
 #define AXM_GOAL_POSITION_L			30
 #define AXM_PRESENT_POSITION_L		36
@@ -59,13 +59,13 @@ void BioloidController::loadPose( const unsigned int * addr )
     int i;
     poseSize = pgm_read_word_near(addr); // number of servos in this pose
     for(i=0; i<poseSize; i++)
-        nextpose[i] = pgm_read_word_near(addr+1+i) << BIOLOID_SHIFT;
+        nextpose_[i] = pgm_read_word_near(addr+1+i) << BIOLOID_SHIFT;
 }
 /* read in current servo positions to the pose. */
 void BioloidController::readPose()
 {
     for(int i=0;i<poseSize;i++){
-        pose_[i] = dxl_get_word(id_[i],AXM_PRESENT_POSITION_L)<<BIOLOID_SHIFT;
+        pose_[i] = Dxl.readWord(id_[i],AXM_PRESENT_POSITION_L)<<BIOLOID_SHIFT;
         delay(25);
     }
 }
@@ -76,21 +76,21 @@ void BioloidController::writePose()
     int length = 4 + (poseSize * 3);   // 3 = id + pos(2byte)
     int checksum = BROADCAST_ID + length + INST_SYNC_WRITE + 2 + AXM_GOAL_POSITION_L;
 
-	dxl_set_txpacket_id( BROADCAST_ID );
-	dxl_set_txpacket_instruction( INST_SYNC_WRITE );
-	dxl_set_txpacket_length( length );
-	dxl_set_txpacket_parameter( 0, AXM_GOAL_POSITION_L );
-	dxl_set_txpacket_parameter( 1, 2 );	// writing two bytes
+	Dxl.setTxPacketId( BROADCAST_ID );
+	Dxl.setTxPacketInstruction( INST_SYNC_WRITE );
+	Dxl.setTxPacketLength( length );
+	Dxl.setTxPacketParameter( 0, AXM_GOAL_POSITION_L );
+	Dxl.setTxPacketParameter( 1, 2 );	// writing two bytes
     for(int i=0; i<poseSize; i++)
     {
         temp = pose_[i] >> BIOLOID_SHIFT;
         checksum += (temp&0xff) + (temp>>8)&0xff + id_[i];
-        dxl_set_txpacket_parameter( 2 + 3*i + 0, id_[i] );
-        dxl_set_txpacket_parameter( 2 + 3*i + 1, (temp)&0xff );
-        dxl_set_txpacket_parameter( 2 + 3*i + 2, (temp>>8)&0xff );
+        Dxl.setTxPacketParameter( 2 + 3*i + 0, id_[i] );
+        Dxl.setTxPacketParameter( 2 + 3*i + 1, (temp)&0xff );
+        Dxl.setTxPacketParameter( 2 + 3*i + 2, (temp>>8)&0xff );
     }
-    dxl_set_txpacket_parameter( 2 + 3*poseSize + 0, (~checksum)&0xff );
-    dxl_txrx_packet();
+    Dxl.setTxPacketParameter( 2 + 3*poseSize + 0, (~checksum)&0xff );
+    Dxl.txrxPacket();
 }
 
 /* set up for an interpolation from pose to nextpose over TIME 

@@ -22,6 +22,11 @@
 #ifndef BioloidController_h
 #define BioloidController_h
 
+
+#include "dynamixel_address_tables.h"
+#include "stdlib.h"
+#include <Pandora.h>
+
 /* poses (avr):
  *  PROGMEM prog_uint16_t name[] = {4,512,512,482,542}; // first number is # of servos
  * sequences:
@@ -31,8 +36,8 @@
 //#define PROGMEM	__FLASH__
 // http://leaflabs.com/docs/arm-gcc.html#arm-gcc-attribute-flash
 //#include <wirish_types.h>
-#define __attr_flash __attribute__((section (".USER_FLASH")))
-#define __FLASH__ __attr_flash
+//#define __attr_flash __attribute__((section (".USER_FLASH")))
+//#define __FLASH__ __attr_flash
 
 typedef const unsigned short prog_uint16_t;
 #define pgm_read_word_near(x) (*(prog_uint16_t*)x)
@@ -63,8 +68,6 @@ typedef const unsigned short prog_uint16_t;
 
 
 
-
-#include "dxl_core.h"
 
 /* pose engine runs at 30Hz (33ms between frames) 
    recommended values for interpolateSetup are of the form X*BIOLOID_FRAME_LENGTH - 1 */
