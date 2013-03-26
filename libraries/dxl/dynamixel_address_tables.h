@@ -1,6 +1,6 @@
 /*
  *******************************************************************************
- *  dynamixel_address_tables.h - 2012-11-13-1441
+ *  dynamixel_address_tables.h
  *******************************************************************************
  *  A header file of questionable quality containing the address tables of
  *    several Dynamixel devices.  It should work with the AX-12/18, AX-S1,
@@ -18,7 +18,7 @@
  *      http://www.robotis.com
  *  
  *  
- *  Copyright (c) 2011, 2012 Matthew Paulishen. All rights reserved.
+ *  Copyright (c) 2011, 2012, 2013 Matthew Paulishen. All rights reserved.
  *  
  *  This program is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -422,38 +422,6 @@ enum{
 };
 
 #include <HaViMo2.h>
-/*
-// HaViMo2
-#define HaViMo2_ID                      100
-typedef enum {
-    Unknown                           = 0,
-    Black                             = 0,
-    Ball                              = 1,
-    Teal                              = 1,
-    Field                             = 2,
-    Red                               = 2,
-    MyGoal                            = 3,
-    Green                             = 3,
-    OppGoal                           = 4,
-    Purple                            = 4,
-    Robot                             = 5,
-    White                             = 5,
-    Cyan                              = 6,
-    Magenta                           = 7
-} HaViMo2_Color_t;
-
-typedef struct {
-    uint8_t     Index, Color;
-    uint16_t    NumPix;
-    uint32_t    SumX, SumY;
-    uint8_t     MaxX, MinX, MaxY, MinY;
-} HaViMo2_Region_t;
-
-typedef struct {
-    uint8_t             valid;
-    HaViMo2_Region_t    rb[15];
-} HaViMo2_Region_Buffer_t;
-*/
 
 // AX-12+/18F address table
 enum{
