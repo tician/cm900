@@ -54,9 +54,23 @@ sp_trans_t sequence[50];        // sequence
 int seqPos;                     // step in current sequence
 
 void setup(){
-	Dxl.begin(1);
-    SerialUSB.begin();//(38400);
-//    pinMode(0,OUTPUT);          // status LED
+	SerialUSB.begin();
+	Dxl.begin(DXL_BAUDRATE_NUMBER);
+
+	pinMode(BOARD_LED_PIN, OUTPUT);
+
+	// Waits 5 seconds for you to open the console (open too quickly after
+	//   downloading new code, and you will get errors
+	delay(5000);
+	SerialUSB.print("Send any value to continue...\n");
+	while(!SerialUSB.available())
+	{
+		delay(1000);
+		digitalWrite(BOARD_LED_PIN, LOW);
+		SerialUSB.print("Send any value to continue...\n");
+		delay(1000);
+		digitalWrite(BOARD_LED_PIN, HIGH);
+	}
 }
 
 /* 

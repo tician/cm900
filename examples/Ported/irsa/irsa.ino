@@ -34,7 +34,14 @@ void setup()
     delay(10000);
 	SerialUSB.print("Send any value to continue...\n");
 	while(!SerialUSB.available());
-	SerialUSB.print("Now starting program\n");
+	SerialUSB.print("Now starting program\n")
+	{
+		delay(1000);
+		digitalWrite(BOARD_LED_PIN, LOW);
+		SerialUSB.print("Send any value to continue...\n");
+		delay(1000);
+		digitalWrite(BOARD_LED_PIN, HIGH);
+	}
 
 	Dxl.writeWord(DXL_WHEEL_ID, AXM_CW_ANGLE_LIMIT_L, 0);
 	Dxl.writeWord(DXL_WHEEL_ID, AXM_CCW_ANGLE_LIMIT_L, 0);
